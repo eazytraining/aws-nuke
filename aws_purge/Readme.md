@@ -9,6 +9,32 @@ Le script seul suffit, il va installer tout ce dont il a besoin de dépendances.
 - Un OS **Redhat** ou dérivé (**Fedora**, **Centos**, etc...)
 - Le shell **Bash** présent sur cet OS
 - L'accès Root sur votre VM
+- Votre **id de compte aws**
+- Votre **access keys** aws
+- Votre **secret key** aws
+- Ces credentials doivent avoir les droits nécessaires dans aws pour supprimer les ressources (la policy **AdministratorAccess** fera l'affaire...)
+
+## Indications supplémentaires
+#### ID de compte aws
+Il est disponible dans votre console aws apres connexions.
+![id de compte aws](images/id%20de%20compte%20aws.png)
+
+#### Access key et Secret key aws
+Si vous n'en disposez pas, il faudrait aller dans le service **IAM** de aws, et créer vos access et secret keys.
+Voici quelques captures pour vous aider : 
+- Aller dans le servive IAM de aws
+    ![id de compte aws](images/credentials1.png)
+- Selectionnez votre user (**terraform** dans mon cas)
+    ![id de compte aws](images/credentials2.png)
+- Créer la paire de clés si elle n'existe pas
+    ![id de compte aws](images/credentials3.png)
+- Sauvegarder et garder jalousement le fichier généré
+    ![id de compte aws](images/credentials4.png)
+- Vérifier que la clés est bien disponible dans aws
+    ![id de compte aws](images/credentials5.png)
+- Ouvrir le fichier téléchargé et valider que vous avez bien vous tokens
+    ![id de compte aws](images/credentials6.png)
+
 
 ## Documentations annexe utile.
 - **Creation du default VPC**  : https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html#create-default-vpc
