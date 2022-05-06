@@ -15,6 +15,10 @@ Le script seul suffit, il va installer tout ce dont il a besoin de dépendances.
 - Ces credentials doivent avoir les droits nécessaires dans aws pour supprimer les ressources (la policy **AdministratorAccess** fera l'affaire...)
 
 ## Indications supplémentaires
+#### Permission du compte aws (Policy)
+Dans notre cas, on dispose d'un compte **IAM** dans AWS, nommé **terraform**. Ci dessous comment vérifier/ajouter des Policy à ce compte : 
+    ![id de compte aws](images/credentials7.png)
+
 #### ID de compte aws
 Il est disponible dans votre console aws apres connexions.
 ![id de compte aws](images/id%20de%20compte%20aws.png)
@@ -34,7 +38,6 @@ Voici quelques captures pour vous aider :
     ![id de compte aws](images/credentials5.png)
 - Ouvrir le fichier téléchargé et valider que vous avez bien vous tokens
     ![id de compte aws](images/credentials6.png)
-
 
 ## Documentations annexe utile.
 - **Creation du default VPC**  : https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html#create-default-vpc
