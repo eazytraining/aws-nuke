@@ -55,11 +55,21 @@ account-blocklist:
 
 accounts:
   "$aws_account_id":
+    filters:
+      IAMUser:
+      - "Llewis"
+      - "Ulrich"
+      - "dirane"
+      IAMUserPolicyAttachment:
+      - "Llewis -> AdministratorAccess"
+      - "Ulrich -> AdministratorAccess"
+      - "dirane -> AdministratorAccess"
+      
 
 resource-types:
 # don't nuke IAM Objects and Keypairs
   excludes:
-  - IAMUser
+#  - IAMUser
   - IAMGroupPolicyAttachment
   - IAMUserGroupAttachment
   - IAMGroup
