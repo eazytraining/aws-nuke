@@ -131,13 +131,29 @@ function create_default_vpc_for_region ()
         done
 }
 
+functioncreate_disable_iam_user_policy ()
+{
+cat <<EOF > ${workdir}/disable_iam_user.json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+        "Effect": "Deny",
+        "Action": "*",
+        "Resource": "*"
+      }
+   ]
+}
+EOF
+}
 
 ################################################   SCRIPT PRINCIPAL ####################################################
-echo "------------------------------------------------------------------------------------------"
-echo "-----------------      Purge du compte aws + Creation du default vpc       ---------------"
-echo "------------------------------------------------------------------------------------------"
+echo "----------------------------------------------------------------------------------------------------------------------------"
+echo "-----------------      Purge du compte aws + Creation du default vpc + Desactivation des user non admin      ---------------"
+echo "----------------------------------------------------------------------------------------------------------------------------"
 
 workdir="${HOME}/aws_purge"
+DEFAULT_AWS_REGION="us-east-1"
 echo -e "Ce sript permet de purger votre compte aws et/ou de créer le VPC par défaut"
 
 configure_credentials
@@ -164,6 +180,31 @@ while [ $choice != q ] || [ $choice != Q ]; do
 
         echo "Lancement de la suppression des ressources"
         ${workdir}/aws-nuke -c ${workdir}/config/nuke-config.yml  --access-key-id ${access_key_id}  --secret-access-key ${secret_access_key} --no-dry-run
+
+        echo -e "Desactivation des user IAM non admin, pour cela, il faudrait en prérequis télécharger le client aws et le configurer"
+          echo -e "Téléchargement du client aws"
+              download_awc_cli
+          echo -e "Creation des fichiers de conf du client aws"
+              configure_aws_cli
+          echo -e "Creation de la Policy disable_iam_user si besoin"
+              aws configure set region ${DEFAULT_AWS_REGION} --profile ${aws_account_id}
+              aws iam wait policy-exists --policy-arn arn:aws:iam::${aws_account_id}:policy/disable_iam_user --profile ${aws_account_id}
+          if [ "$?" -ne 0 ]; then
+              echo -e "La policy disable_iam_user n'existe pas, nous allons la créer"
+              sleep 3
+              create_disable_iam_user_policy
+              aws iam create-policy --policy-name disable_iam_user --policy-document file://disable_iam_user.json
+          else
+              echo -e "La policy disable_iam_user existe déja, rien à faire !"
+              sleep 3
+          fi
+          echo -e "Recuperation de la liste des user non admin"
+              IAM_USERS_LIST=$(aws iam list-users  --output text --profile ${aws_account_id} | awk '{print $NF}' | grep -vEi "dirane|Llewis|Ulrich")
+          echo -e "Association de la Policy disable_iam_user aux users non admin"
+          for IAM_USER in $(echo $IAM_USERS_LIST); do
+              echo -e "Association au user $IAM_USER"
+              aws iam attach-user-policy --policy-arn arn:aws:iam::${aws_account_id}:policy/disable_iam_user --user-name ${IAM_USER} --profile ${aws_account_id}    
+          done
     ;;
 
     2)  echo -e "Téléchargement du client aws"
