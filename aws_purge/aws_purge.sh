@@ -7,7 +7,7 @@ function choose_action ()
     if [ -z "$choice" ]; then
         choice="empty"
     fi
-   
+
 }
 
 
@@ -26,7 +26,7 @@ function create_nuke_config ()
 {
 cat <<EOF > ${workdir}/config/nuke-config.yml
 regions:
-- eu-west-3       # Paris
+#- eu-west-3       # Paris
 - us-east-1       # Virginie_du_Nord
 - us-east-2       # Ohio
 - ap-southeast-2  # Sydney
@@ -64,21 +64,22 @@ accounts:
       - "Llewis -> AdministratorAccess"
       - "Ulrich -> AdministratorAccess"
       - "dirane -> AdministratorAccess"
-      
+
 
 resource-types:
 # don't nuke IAM Objects and Keypairs
   excludes:
-#  - IAMUser
-  - IAMGroupPolicyAttachment
-  - IAMUserGroupAttachment
-  - IAMGroup
-  - IAMUserAccessKey
-  - IAMRole
+  - IAMUser
   - EC2KeyPair
-  - IAMUserPolicyAttachment
-  - IAMLoginProfile
-  - IAMRolePolicyAttachment
+  - EC2VPC
+  - EC2Subnet
+  - EC2SecurityGroup
+  - EC2RouteTable
+  - EC2DHCPOption
+  - EC2InternetGatewayAttachment
+  - EC2InternetGateway
+  - EC2NetworkACL
+  - EC2NetworkInterface
   - IAM*
 EOF
 }
@@ -91,9 +92,9 @@ function  usage ()
 function fermeture_programme ()
 {
     echo -e "Le programme va se fermer dans 3 secondes"
-    sleep 3 
+    sleep 3
     echo -e "Au revoir !"
-    exit 0     
+    exit 0
 }
 
 function  configure_aws_cli ()
@@ -143,7 +144,7 @@ configure_credentials
 choice="0"
 while [ $choice != q ] || [ $choice != Q ]; do
   choose_action
-  case "$choice" in 
+  case "$choice" in
     1)  echo -e "Nous allons démarer la purge de votre compte"
         mkdir -p ${workdir}
         cd $workdir
@@ -180,5 +181,5 @@ while [ $choice != q ] || [ $choice != Q ]; do
 
     *)  usage
     ;;
-  esac 
+  esac
 done
