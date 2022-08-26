@@ -26,7 +26,7 @@ function create_nuke_config ()
 {
 cat <<EOF > ${workdir}/config/nuke-config.yml
 regions:
-#- eu-west-3       # Paris
+- eu-west-3       # Paris
 - us-east-1       # Virginie_du_Nord
 - us-east-2       # Ohio
 - ap-southeast-2  # Sydney
@@ -124,7 +124,7 @@ function download_awc_cli ()
 
 function create_default_vpc_for_region ()
 {
-        for region in us-west-2 us-east-1 us-west-3 us-east-2 ap-southeast-2 eu-central-1 us-west-1 af-south-1; do
+        for region in eu-west-3 us-east-1 us-east-2 ap-southeast-2 eu-central-1 us-west-1 us-west-2 af-south-1 eu-north-1 me-south-1 ca-central-1  ap-northeast-1 ap-southeast-3 ap-east-1 ap-south-1 ap-northeast-3 ap-northeast-2 ap-southeast-1 eu-west-1 eu-west-2 eu-south-1 sa-east-1 ; do
             aws configure set region ${region} --profile ${aws_account_id}
             aws ec2 create-default-vpc --profile ${aws_account_id}
         done
