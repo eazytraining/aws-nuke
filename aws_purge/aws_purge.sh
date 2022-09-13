@@ -130,7 +130,7 @@ function create_default_vpc_for_region ()
         done
 }
 
-functioncreate_disable_iam_user_policy ()
+function create_disable_iam_user_policy ()
 {
 cat <<EOF > ${workdir}/disable_iam_user.json
 {
